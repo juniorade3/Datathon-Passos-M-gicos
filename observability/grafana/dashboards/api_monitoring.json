@@ -1,0 +1,456 @@
+{
+    "annotations": {
+        "list": []
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 1,
+    "id": null,
+    "links": [],
+    "panels": [
+        {
+            "title": "📊 Métricas da API",
+            "type": "row",
+            "gridPos": {
+                "h": 1,
+                "w": 24,
+                "x": 0,
+                "y": 0
+            },
+            "collapsed": false
+        },
+        {
+            "title": "Requests por Segundo",
+            "type": "timeseries",
+            "gridPos": {
+                "h": 8,
+                "w": 8,
+                "x": 0,
+                "y": 1
+            },
+            "datasource": {
+                "type": "prometheus",
+                "uid": ""
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "lineWidth": 2,
+                        "fillOpacity": 20,
+                        "gradientMode": "scheme",
+                        "spanNulls": true
+                    },
+                    "unit": "reqps"
+                },
+                "overrides": []
+            },
+            "targets": [
+                {
+                    "expr": "rate(http_requests_total{job=\"passos-magicos-api\"}[1m])",
+                    "legendFormat": "{{method}} {{handler}} {{status}}",
+                    "refId": "A"
+                }
+            ]
+        },
+        {
+            "title": "Latência p50 / p95 / p99",
+            "type": "timeseries",
+            "gridPos": {
+                "h": 8,
+                "w": 8,
+                "x": 8,
+                "y": 1
+            },
+            "datasource": {
+                "type": "prometheus",
+                "uid": ""
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "lineWidth": 2,
+                        "fillOpacity": 10,
+                        "gradientMode": "scheme"
+                    },
+                    "unit": "s"
+                },
+                "overrides": []
+            },
+            "targets": [
+                {
+                    "expr": "histogram_quantile(0.50, rate(http_request_duration_seconds_bucket{job=\"passos-magicos-api\"}[1m]))",
+                    "legendFormat": "p50",
+                    "refId": "A"
+                },
+                {
+                    "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job=\"passos-magicos-api\"}[1m]))",
+                    "legendFormat": "p95",
+                    "refId": "B"
+                },
+                {
+                    "expr": "histogram_quantile(0.99, rate(http_request_duration_seconds_bucket{job=\"passos-magicos-api\"}[1m]))",
+                    "legendFormat": "p99",
+                    "refId": "C"
+                }
+            ]
+        },
+        {
+            "title": "Taxa de Erros (HTTP 4xx/5xx)",
+            "type": "timeseries",
+            "gridPos": {
+                "h": 8,
+                "w": 8,
+                "x": 16,
+                "y": 1
+            },
+            "datasource": {
+                "type": "prometheus",
+                "uid": ""
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "fixedColor": "red",
+                        "mode": "fixed"
+                    },
+                    "custom": {
+                        "lineWidth": 2,
+                        "fillOpacity": 30,
+                        "gradientMode": "scheme"
+                    },
+                    "unit": "reqps"
+                },
+                "overrides": []
+            },
+            "targets": [
+                {
+                    "expr": "rate(http_requests_total{job=\"passos-magicos-api\", status=~\"4..|5..\"}[1m])",
+                    "legendFormat": "{{status}} {{handler}}",
+                    "refId": "A"
+                }
+            ]
+        },
+        {
+            "title": "🤖 Drift do Modelo",
+            "type": "row",
+            "gridPos": {
+                "h": 1,
+                "w": 24,
+                "x": 0,
+                "y": 9
+            },
+            "collapsed": false
+        },
+        {
+            "title": "Taxa de Risco (drift)",
+            "type": "gauge",
+            "gridPos": {
+                "h": 8,
+                "w": 6,
+                "x": 0,
+                "y": 10
+            },
+            "datasource": {
+                "type": "prometheus",
+                "uid": ""
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "min": 0,
+                    "max": 1,
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "yellow",
+                                "value": 0.3
+                            },
+                            {
+                                "color": "orange",
+                                "value": 0.5
+                            },
+                            {
+                                "color": "red",
+                                "value": 0.7
+                            }
+                        ]
+                    },
+                    "unit": "percentunit"
+                },
+                "overrides": []
+            },
+            "targets": [
+                {
+                    "expr": "drift_taxa_risco",
+                    "legendFormat": "Taxa de Risco",
+                    "refId": "A"
+                }
+            ]
+        },
+        {
+            "title": "Probabilidade Média de Risco",
+            "type": "gauge",
+            "gridPos": {
+                "h": 8,
+                "w": 6,
+                "x": 6,
+                "y": 10
+            },
+            "datasource": {
+                "type": "prometheus",
+                "uid": ""
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "min": 0,
+                    "max": 1,
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "yellow",
+                                "value": 0.3
+                            },
+                            {
+                                "color": "orange",
+                                "value": 0.5
+                            },
+                            {
+                                "color": "red",
+                                "value": 0.7
+                            }
+                        ]
+                    },
+                    "unit": "percentunit"
+                },
+                "overrides": []
+            },
+            "targets": [
+                {
+                    "expr": "drift_probabilidade_media",
+                    "legendFormat": "Prob. Média",
+                    "refId": "A"
+                }
+            ]
+        },
+        {
+            "title": "Total de Predições no Buffer",
+            "type": "stat",
+            "gridPos": {
+                "h": 8,
+                "w": 6,
+                "x": 12,
+                "y": 10
+            },
+            "datasource": {
+                "type": "prometheus",
+                "uid": ""
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "blue",
+                                "value": null
+                            },
+                            {
+                                "color": "green",
+                                "value": 10
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "targets": [
+                {
+                    "expr": "drift_total_predicoes",
+                    "legendFormat": "Total",
+                    "refId": "A"
+                }
+            ]
+        },
+        {
+            "title": "Taxa de Risco ao Longo do Tempo",
+            "type": "timeseries",
+            "gridPos": {
+                "h": 8,
+                "w": 6,
+                "x": 18,
+                "y": 10
+            },
+            "datasource": {
+                "type": "prometheus",
+                "uid": ""
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "fixedColor": "orange",
+                        "mode": "fixed"
+                    },
+                    "custom": {
+                        "lineWidth": 2,
+                        "fillOpacity": 25,
+                        "gradientMode": "scheme"
+                    },
+                    "unit": "percentunit"
+                },
+                "overrides": []
+            },
+            "targets": [
+                {
+                    "expr": "drift_taxa_risco",
+                    "legendFormat": "Taxa de Risco",
+                    "refId": "A"
+                }
+            ]
+        },
+        {
+            "title": "Média das Features (Drift)",
+            "type": "timeseries",
+            "gridPos": {
+                "h": 10,
+                "w": 12,
+                "x": 0,
+                "y": 18
+            },
+            "datasource": {
+                "type": "prometheus",
+                "uid": ""
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "lineWidth": 2,
+                        "fillOpacity": 10,
+                        "spanNulls": true
+                    }
+                },
+                "overrides": []
+            },
+            "targets": [
+                {
+                    "expr": "drift_feature_media",
+                    "legendFormat": "{{feature}}",
+                    "refId": "A"
+                }
+            ]
+        },
+        {
+            "title": "Desvio Padrão das Features (Drift)",
+            "type": "timeseries",
+            "gridPos": {
+                "h": 10,
+                "w": 12,
+                "x": 12,
+                "y": 18
+            },
+            "datasource": {
+                "type": "prometheus",
+                "uid": ""
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "lineWidth": 2,
+                        "fillOpacity": 10,
+                        "spanNulls": true
+                    }
+                },
+                "overrides": []
+            },
+            "targets": [
+                {
+                    "expr": "drift_feature_std",
+                    "legendFormat": "{{feature}}",
+                    "refId": "A"
+                }
+            ]
+        },
+        {
+            "title": "📝 Logs da API",
+            "type": "row",
+            "gridPos": {
+                "h": 1,
+                "w": 24,
+                "x": 0,
+                "y": 28
+            },
+            "collapsed": false
+        },
+        {
+            "title": "Logs em Tempo Real",
+            "type": "logs",
+            "gridPos": {
+                "h": 10,
+                "w": 24,
+                "x": 0,
+                "y": 29
+            },
+            "datasource": {
+                "type": "loki",
+                "uid": ""
+            },
+            "targets": [
+                {
+                    "expr": "{job=\"docker\"} |= \"passos_magicos\"",
+                    "refId": "A"
+                }
+            ],
+            "options": {
+                "showTime": true,
+                "showLabels": false,
+                "showCommonLabels": false,
+                "wrapLogMessage": true,
+                "prettifyLogMessage": true,
+                "enableLogDetails": true,
+                "sortOrder": "Descending",
+                "dedupStrategy": "none"
+            }
+        }
+    ],
+    "schemaVersion": 39,
+    "tags": [
+        "passos-magicos",
+        "ml",
+        "drift"
+    ],
+    "templating": {
+        "list": []
+    },
+    "time": {
+        "from": "now-30m",
+        "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "browser",
+    "title": "Passos Mágicos — Monitoramento",
+    "uid": "passos-magicos-monitoring",
+    "version": 1
+}

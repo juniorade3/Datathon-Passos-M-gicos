@@ -1,0 +1,16 @@
+# ============================================================
+#  Grafana — Auto-provisioning de dashboards
+# ============================================================
+
+apiVersion: 1
+
+providers:
+  - name: "Passos Mágicos"
+    orgId: 1
+    folder: ""
+    type: file
+    disableDeletion: false
+    editable: true
+    options:
+      path: /var/lib/grafana/dashboards
+      foldersFromFilesStructure: false
