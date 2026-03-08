@@ -9,9 +9,9 @@ um stack completo de **observabilidade** (Prometheus, Grafana, Loki).
 
 ## 📋 1) Visão Geral do Projeto
 
-### Objetivo
+### Objetivo 
 
-Desenvolver um modelo de Machine Learning capaz de **prever o risco de
+Desenvolver um modeelo de Machine Learning capaz de **prever o risco de
 defasagem escolar** de estudantes atendidos pela Associação Passos Mágicos,
 utilizando indicadores educacionais e socioeconômicos da Pesquisa PEDE.
 
